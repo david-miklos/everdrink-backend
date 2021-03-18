@@ -7,27 +7,27 @@ export class Product {
   @Column({ type: 'text' })
   description: string;
 
-  @Column()
+  @Column({ type: 'varchar' })
   gsku: string;
 
-  @Column()
+  @Column({ type: 'varchar' })
   quantity: string;
 
-  @Column()
+  @Column({ type: 'varchar' })
   package_type: string;
 
-  @Column()
+  @Column({ type: 'varchar' })
   volume: string;
 
-  @Column()
+  @Column({ type: 'varchar' })
   producer: string;
 
-  @Column()
+  @Column({ type: 'varchar' })
   sku: string;
 
-  @Column()
+  @Column({ type: 'varchar' })
   title: string;
 
-  @Column()
+  @Column({ type: 'varchar' })
   type: string;
 }
