@@ -6,6 +6,7 @@ import { User } from './entities/user.entity';
 import { UserDto } from './dto/user.dto';
 import { CreateUserDto } from './dto/user.create.dto';
 import { comparePasswords, toUserDto } from '../shared/utils';
+import { UserRoleDto } from './dto/user.role.dto';
 
 @Injectable()
 export class UserService {
@@ -13,12 +14,12 @@ export class UserService {
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
   ) {}
-
+  /*
   // eslint-disable-next-line @typescript-eslint/ban-types
   async findOne(options?: object): Promise<UserDto> {
     const user = await this.userRepository.findOne(options);
     return toUserDto(user);
-  }
+  }*/
 
   async findByLogin({ email, password }: LoginUserDto): Promise<UserDto> {
     const user = await this.userRepository.findOne({ where: { email } });
@@ -38,7 +39,7 @@ export class UserService {
   }
 
   async findByPayload({ email }: any): Promise<UserDto> {
-    return await this.findOne({
+    return await this.userRepository.findOne({
       where: { email },
     });
   }
@@ -58,6 +59,51 @@ export class UserService {
     });
 
     await this.userRepository.save(user);
+
+    return toUserDto(user);
+  }
+
+  async getAllUsers(): Promise<UserDto[]> {
+    const users = await this.userRepository.find();
+    return users.map((user) => toUserDto(user));
+  }
+
+  async getOneUser(id: string): Promise<UserDto> {
+    const user = await this.userRepository.findOne({
+      where: { id },
+    });
+
+    if (!user) {
+      throw new HttpException(`User doesn't exist`, HttpStatus.BAD_REQUEST);
+    }
+
+    return toUserDto(user);
+  }
+
+  async updateUserRole(id: string, { role }: UserRoleDto): Promise<UserDto> {
+    const user: User = await this.userRepository.findOne({
+      where: { id },
+    });
+
+    if (!user) {
+      throw new HttpException(`User doesn't exist`, HttpStatus.BAD_REQUEST);
+    }
+
+    await this.userRepository.update(id, { role: role });
+
+    return toUserDto(user);
+  }
+
+  async deleteUser(id: string): Promise<UserDto> {
+    const user: User = await this.userRepository.findOne({
+      where: { id },
+    });
+
+    if (!user) {
+      throw new HttpException(`User doesn't exist`, HttpStatus.BAD_REQUEST);
+    }
+
+    await this.userRepository.delete({ id });
 
     return toUserDto(user);
   }
