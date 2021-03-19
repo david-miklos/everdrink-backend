@@ -15,7 +15,7 @@ import { LoginStatus } from './interfaces/login.status.interface';
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
-  @Post('signup')
+  @Post('sign_up')
   public async signUp(
     @Body() createUserDto: CreateUserDto,
   ): Promise<RegistrationStatus> {
@@ -28,7 +28,7 @@ export class AuthController {
     return result;
   }
 
-  @Post('signin')
+  @Post('sign_in')
   public async signIn(
     @Body() loginUserDto: LoginUserDto,
   ): Promise<LoginStatus> {

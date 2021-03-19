@@ -21,21 +21,21 @@ export class UserController {
 
   @Roles(Role.GUEST, Role.ADMIN)
   @UseGuards(AuthGuard(), RolesGuard)
-  @Get('getall')
+  @Get('get')
   async findAll(): Promise<UserDto[]> {
     return await this.userService.getAllUsers();
   }
 
   @Roles(Role.GUEST, Role.ADMIN)
   @UseGuards(AuthGuard(), RolesGuard)
-  @Get(':id/getone')
+  @Get(':id/get')
   async findOne(@Param('id') id: string): Promise<UserDto> {
     return await this.userService.getOneUser(id);
   }
 
   @Roles(Role.ADMIN)
   @UseGuards(AuthGuard(), RolesGuard)
-  @Put(':id/update')
+  @Put(':id/update_role')
   async update(
     @Param('id') id: string,
     @Body() userRoleDto: UserRoleDto,
