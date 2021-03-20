@@ -10,7 +10,7 @@ import { RegistrationStatus } from './interfaces/registration.status.interface';
 import { AuthService } from './auth.service';
 import { CreateUserDto } from '../user/dto/user.create.dto';
 import { LoginStatus } from './interfaces/login.status.interface';
-import { Public } from "./routes.decorator";
+import { Public } from "./decorators/routes.decorator";
 
 @Controller('auth')
 export class AuthController {

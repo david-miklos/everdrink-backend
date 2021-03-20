@@ -11,7 +11,7 @@ import { ProductService } from './product.service';
 import { ProductCreateDto } from './dto/product.create.dto';
 import { ProductDto } from './dto/product.dto';
 import { Role } from '../user/role.enum';
-import { Roles } from '../auth/roles.decorator';
+import { Roles } from '../auth/decorators/roles.decorator';
 
 @Controller('product')
 export class ProductController {

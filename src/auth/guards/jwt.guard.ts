@@ -1,7 +1,9 @@
 import { ExecutionContext, Injectable } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
-import { IS_PUBLIC_KEY } from './routes.decorator';
-import { AuthGuard } from '@nestjs/passport';
+import { IS_PUBLIC_KEY } from '../decorators/routes.decorator';
+import { AuthGuard } from "@nestjs/passport";
+
+const foo = process.env.PASSPORT_DEFAULT_STRATEGY
 
 @Injectable()
 export class JwtAuthGuard extends AuthGuard('jwt') {

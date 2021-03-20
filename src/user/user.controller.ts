@@ -8,7 +8,7 @@ import {
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { UserDto } from './dto/user.dto';
-import { Roles } from '../auth/roles.decorator';
+import { Roles } from '../auth/decorators/roles.decorator';
 import { Role } from './role.enum';
 import { UserRoleDto } from './dto/user.role.dto';
 
