@@ -42,3 +42,16 @@ export const toProductDto = (data: Product): ProductDto => {
   };
   return productDto;
 };
+
+export const fileFilter = (req, file, callback) => {
+  if (!file.originalname.match(/\.(jpg|jpeg|png|pdf)$/)) {
+    return callback(new Error('Only image or pdf files are allowed!'), false);
+  }
+  callback(null, true);
+};
+
+export const editFileName = (req, file, callback) => {
+  const name = req.user.email.split('@')[0];
+  const fileExtName = file.originalname.split('.')[1];
+  callback(null, `${name}.${fileExtName}`);
+};

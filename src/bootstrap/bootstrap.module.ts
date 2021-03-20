@@ -4,6 +4,8 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConnectionOptions } from 'typeorm';
 import AppConfig from '../config/app.config';
+import { MulterModule } from "@nestjs/platform-express";
+import { MulterOptions } from "@nestjs/platform-express/multer/interfaces/multer-options.interface";
 
 @Module({
   imports: [
@@ -32,9 +34,16 @@ import AppConfig from '../config/app.config';
       },
       inject: [ConfigService],
     }),*/
+    MulterModule.registerAsync({
+      imports: [ConfigModule],
+      useFactory: (configService: ConfigService) => {
+        return configService.get<MulterOptions>('multer');
+      },
+      inject: [ConfigService],
+    }),
   ],
   controllers: [],
   providers: [],
-  exports: [ConfigModule, TypeOrmModule, PassportModule],
+  exports: [ConfigModule, TypeOrmModule, PassportModule, MulterModule],
 })
 export class BootstrapModule {}
