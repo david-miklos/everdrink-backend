@@ -3,15 +3,17 @@ import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import { UserModule } from '../user/user.module';
 import { JwtModule } from '@nestjs/jwt';
-import { PassportModule } from '@nestjs/passport';
+import { AuthGuard, PassportModule } from '@nestjs/passport';
 import { JwtStrategy } from './jwt.strategy';
 import { ConfigModule } from '@nestjs/config';
 import { RolesGuard } from './roles.guard';
+import { APP_GUARD } from '@nestjs/core';
+import { JwtAuthGuard } from './jwt.guard';
 
 @Module({
   imports: [
     ConfigModule,
-    forwardRef(() => UserModule),
+    UserModule,
     PassportModule.register({
       defaultStrategy: 'jwt',
       property: 'user',
@@ -25,7 +27,18 @@ import { RolesGuard } from './roles.guard';
     }),
   ],
   controllers: [AuthController],
-  providers: [AuthService, JwtStrategy, RolesGuard],
-  exports: [PassportModule, JwtModule],
+  providers: [
+    {
+      provide: APP_GUARD,
+      useClass: JwtAuthGuard,
+    },
+    {
+      provide: APP_GUARD,
+      useClass: RolesGuard,
+    },
+    AuthService,
+    JwtStrategy,
+  ],
+  //exports: [PassportModule, JwtModule],
 })
 export class AuthModule {}

@@ -5,13 +5,10 @@ import {
   Get,
   Param,
   Put,
-  UseGuards,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { UserDto } from './dto/user.dto';
 import { Roles } from '../auth/roles.decorator';
-import { RolesGuard } from '../auth/roles.guard';
-import { AuthGuard } from '@nestjs/passport';
 import { Role } from './role.enum';
 import { UserRoleDto } from './dto/user.role.dto';
 
@@ -19,22 +16,19 @@ import { UserRoleDto } from './dto/user.role.dto';
 export class UserController {
   constructor(private userService: UserService) {}
 
-  @Roles(Role.GUEST, Role.ADMIN)
-  @UseGuards(AuthGuard(), RolesGuard)
+  @Roles(Role.ADMIN)
   @Get('get')
   async findAll(): Promise<UserDto[]> {
     return await this.userService.getAllUsers();
   }
 
-  @Roles(Role.GUEST, Role.ADMIN)
-  @UseGuards(AuthGuard(), RolesGuard)
+  @Roles(Role.ADMIN)
   @Get(':id/get')
   async findOne(@Param('id') id: string): Promise<UserDto> {
     return await this.userService.getOneUser(id);
   }
 
   @Roles(Role.ADMIN)
-  @UseGuards(AuthGuard(), RolesGuard)
   @Put(':id/update_role')
   async update(
     @Param('id') id: string,
@@ -44,7 +38,6 @@ export class UserController {
   }
 
   @Roles(Role.ADMIN)
-  @UseGuards(AuthGuard(), RolesGuard)
   @Delete(':id/delete')
   async delete(@Param('id') id: string): Promise<UserDto> {
     return await this.userService.deleteUser(id);
