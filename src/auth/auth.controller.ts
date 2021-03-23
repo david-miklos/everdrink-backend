@@ -1,24 +1,20 @@
-import {
-  Body,
-  Controller,
-  HttpException,
-  HttpStatus,
-  Post,
-} from '@nestjs/common';
-import { LoginUserDto } from '../user/dto/user.login.dto';
-import { RegistrationStatus } from './interfaces/registration.status.interface';
-import { AuthService } from './auth.service';
-import { CreateUserDto } from '../user/dto/user.create.dto';
-import { LoginStatus } from './interfaces/login.status.interface';
+import { Controller, Request, Post, UseGuards, Get, HttpStatus, HttpException, Body } from "@nestjs/common";
+import { LocalAuthGuard } from "./guards/local.auth.guard";
+import { AuthService } from "./auth.service";
+import { RegistrationStatus } from "./interfaces/registration.status.interface";
+import { CreateUserDto } from "../user/dto/user.create.dto";
 import { Public } from "./decorators/routes.decorator";
+import { UserDto } from "../user/dto/user.dto";
+import { SignInStatusInterface } from "./interfaces/sign.in.status.interface";
+import { LoginUserDto } from "../user/dto/user.login.dto";
 
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+  constructor(private authService: AuthService) {}
 
   @Public()
   @Post('sign_up')
-  public async signUp(
+  async signUp(
     @Body() createUserDto: CreateUserDto,
   ): Promise<RegistrationStatus> {
     const result: RegistrationStatus = await this.authService.signUp(
@@ -31,10 +27,9 @@ export class AuthController {
   }
 
   @Public()
+  @UseGuards(LocalAuthGuard)
   @Post('sign_in')
-  public async signIn(
-    @Body() loginUserDto: LoginUserDto,
-  ): Promise<LoginStatus> {
-    return await this.authService.signIn(loginUserDto);
+  async signIn(@Body() loginUserDto: LoginUserDto): Promise<SignInStatusInterface> {
+    return this.authService.signIn(loginUserDto);
   }
 }

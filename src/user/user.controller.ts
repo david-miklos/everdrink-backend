@@ -12,12 +12,10 @@ import {
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { UserDto } from './dto/user.dto';
-import { Roles } from '../auth/decorators/roles.decorator';
 import { Role } from './role.enum';
 import { UserRoleDto } from './dto/user.role.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { diskStorage } from 'multer';
-import { editFileName, fileFilter } from '../shared/utils';
+import { Roles } from "../auth/decorators/roles.decorator";
 
 @Controller('user')
 export class UserController {
@@ -50,17 +48,8 @@ export class UserController {
     return await this.userService.deleteUser(id);
   }
 
-  //TODO Make the localOptions global ; Already made the foundation for it, but it's not working yet
   @Post('upload')
-  @UseInterceptors(
-    FileInterceptor('file', {
-      storage: diskStorage({
-        destination: './uploads',
-        filename: editFileName,
-      }),
-      fileFilter: fileFilter,
-    }),
-  )
+  @UseInterceptors(FileInterceptor('file'))
   async uploadFile(@UploadedFile() file: Express.Multer.File): Promise<Object> {
     const { originalname, mimetype } = file;
 

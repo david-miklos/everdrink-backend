@@ -5,7 +5,7 @@ import { LoginUserDto } from './dto/user.login.dto';
 import { User } from './entities/user.entity';
 import { UserDto } from './dto/user.dto';
 import { CreateUserDto } from './dto/user.create.dto';
-import { comparePasswords, toUserDto } from '../shared/utils';
+import { comparePasswords, toLoginUserDto, toUserDto } from '../shared/utils';
 import { UserRoleDto } from './dto/user.role.dto';
 
 @Injectable()
@@ -16,32 +16,27 @@ export class UserService {
   ) {}
   /*
   // eslint-disable-next-line @typescript-eslint/ban-types
-  async findOne(options?: object): Promise<UserDto> {
+  async findOne(options?: object): Promise<LoginUserDto> {
     const user = await this.userRepository.findOne(options);
-    return toUserDto(user);
+    return toLoginUserDto(user);
   }*/
 
-  async findByLogin({ email, password }: LoginUserDto): Promise<UserDto> {
+  async findForValidation(email: string): Promise<User> {
     const user = await this.userRepository.findOne({ where: { email } });
 
     if (!user) {
       throw new HttpException('User not found', HttpStatus.UNAUTHORIZED);
     }
 
-    // compare passwords
-    const areEqual = await comparePasswords(user.password, password);
-
-    if (!areEqual) {
-      throw new HttpException('Invalid credentials', HttpStatus.UNAUTHORIZED);
-    }
-
-    return toUserDto(user);
+    return user;
   }
 
-  async findByPayload({ email }: any): Promise<UserDto> {
-    return await this.userRepository.findOne({
+  async findForJwt({ email, password }: LoginUserDto): Promise<UserDto> {
+    const user = await this.userRepository.findOne({
       where: { email },
     });
+
+    return toUserDto(user);
   }
 
   async create(createUserDto: CreateUserDto): Promise<UserDto> {

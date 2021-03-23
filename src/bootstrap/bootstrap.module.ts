@@ -1,11 +1,11 @@
-import { Module } from '@nestjs/common';
-import { IAuthModuleOptions, PassportModule } from '@nestjs/passport';
+import { Module } from "@nestjs/common";
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConnectionOptions } from 'typeorm';
 import AppConfig from '../config/app.config';
-import { MulterModule } from "@nestjs/platform-express";
-import { MulterOptions } from "@nestjs/platform-express/multer/interfaces/multer-options.interface";
+import { MulterModule } from '@nestjs/platform-express';
+import { MulterOptions } from '@nestjs/platform-express/multer/interfaces/multer-options.interface';
+import { JwtModule, JwtModuleOptions } from "@nestjs/jwt";
 
 @Module({
   imports: [
@@ -20,20 +20,13 @@ import { MulterOptions } from "@nestjs/platform-express/multer/interfaces/multer
       },
       inject: [ConfigService],
     }),
-    PassportModule.registerAsync({
-      imports: [ConfigModule],
-      useFactory: (configService: ConfigService) => {
-        return configService.get<IAuthModuleOptions>('passport');
-      },
-      inject: [ConfigService],
-    }),
-    /*JwtModule.registerAsync({
+    JwtModule.registerAsync({
       imports: [ConfigModule],
       useFactory: (configService: ConfigService) => {
         return configService.get<JwtModuleOptions>('jwt');
       },
       inject: [ConfigService],
-    }),*/
+    }),
     MulterModule.registerAsync({
       imports: [ConfigModule],
       useFactory: (configService: ConfigService) => {
@@ -44,6 +37,11 @@ import { MulterOptions } from "@nestjs/platform-express/multer/interfaces/multer
   ],
   controllers: [],
   providers: [],
-  exports: [ConfigModule, TypeOrmModule, PassportModule, MulterModule],
+  exports: [
+    ConfigModule,
+    TypeOrmModule,
+    JwtModule,
+    MulterModule,
+  ],
 })
 export class BootstrapModule {}
