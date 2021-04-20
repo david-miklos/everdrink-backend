@@ -75,7 +75,7 @@ export class UserService {
     return toUserDto(user);
   }
 
-  async updateUserRole(id: string, { role }: UserRoleDto): Promise<UserDto> {
+  async updateUserRole(id: string, userRoleDto: UserRoleDto): Promise<UserDto> {
     const user: User = await this.userRepository.findOne({
       where: { id },
     });
@@ -84,7 +84,7 @@ export class UserService {
       throw new HttpException(`User doesn't exist`, HttpStatus.BAD_REQUEST);
     }
 
-    await this.userRepository.update(id, { role: role });
+    await this.userRepository.update(id, userRoleDto);
 
     return toUserDto(user);
   }

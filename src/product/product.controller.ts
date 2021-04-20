@@ -12,12 +12,14 @@ import { ProductCreateDto } from './dto/product.create.dto';
 import { ProductDto } from './dto/product.dto';
 import { Role } from '../user/role.enum';
 import { Roles } from '../auth/decorators/roles.decorator';
+import { Public } from 'src/auth/decorators/routes.decorator';
 
 @Controller('product')
 export class ProductController {
   constructor(private productService: ProductService) {}
 
-  @Get('get')
+  @Public()
+  @Get('')
   async findAll(): Promise<ProductDto[]> {
     return await this.productService.getAllProducts();
   }
@@ -26,16 +28,18 @@ export class ProductController {
   async findOne(@Param('id') id: string): Promise<ProductDto> {
     return await this.productService.getOneProduct(id);
   }
-
-  @Roles(Role.ADMIN)
-  @Post('create')
+  @Public()
+  //@Roles(Role.ADMIN)
+  @Post(':name/create')
   async create(
     @Body() productCreateDto: ProductCreateDto,
+    @Param('name') categoryName: string,
   ): Promise<ProductDto> {
-    return await this.productService.createProduct(productCreateDto);
+    return await this.productService.createProduct(categoryName,productCreateDto);
   }
 
-  @Roles(Role.ADMIN)
+  @Public()
+  //@Roles(Role.ADMIN)
   @Put(':id/update')
   async update(
     @Param('id') id: string,
@@ -43,8 +47,8 @@ export class ProductController {
   ): Promise<ProductDto> {
     return await this.productService.updateProduct(id, productDto);
   }
-
-  @Roles(Role.ADMIN)
+  @Public()
+  //@Roles(Role.ADMIN)
   @Delete(':id/delete')
   async delete(@Param('id') id: string): Promise<ProductDto> {
     return await this.productService.deleteProduct(id);

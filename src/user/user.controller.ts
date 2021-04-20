@@ -15,25 +15,29 @@ import { UserDto } from './dto/user.dto';
 import { Role } from './role.enum';
 import { UserRoleDto } from './dto/user.role.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { Roles } from "../auth/decorators/roles.decorator";
+import { Roles } from '../auth/decorators/roles.decorator';
+import { Public } from 'src/auth/decorators/routes.decorator';
 
 @Controller('user')
 export class UserController {
   constructor(private userService: UserService) {}
 
-  @Roles(Role.ADMIN)
-  @Get('get')
+  @Public()
+  //@Roles(Role.ADMIN)
+  @Get('')
   async findAll(): Promise<UserDto[]> {
     return await this.userService.getAllUsers();
   }
-
-  @Roles(Role.ADMIN)
-  @Get(':id/get')
+  
+  @Public()
+  //@Roles(Role.ADMIN)
+  @Get(':id')
   async findOne(@Param('id') id: string): Promise<UserDto> {
     return await this.userService.getOneUser(id);
   }
 
-  @Roles(Role.ADMIN)
+  @Public()
+  // @Roles(Role.ADMIN)
   @Put(':id/update_role')
   async update(
     @Param('id') id: string,
@@ -41,8 +45,8 @@ export class UserController {
   ): Promise<UserDto> {
     return await this.userService.updateUserRole(id, userRoleDto);
   }
-
-  @Roles(Role.ADMIN)
+  
+  //@Roles(Role.ADMIN)
   @Delete(':id/delete')
   async delete(@Param('id') id: string): Promise<UserDto> {
     return await this.userService.deleteUser(id);
@@ -52,7 +56,6 @@ export class UserController {
   @UseInterceptors(FileInterceptor('file'))
   async uploadFile(@UploadedFile() file: Express.Multer.File): Promise<Object> {
     const { originalname, mimetype } = file;
-
     return { originalname, mimetype };
   }
 

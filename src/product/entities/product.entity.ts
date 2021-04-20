@@ -1,33 +1,46 @@
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import { Category } from 'src/category/entities/category.entity';
+import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
 @Entity()
 export class Product {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column({ type: 'text' })
-  description: string;
+  @Column({ type: 'varchar' })
+  brand: string;
 
   @Column({ type: 'varchar' })
-  gsku: string;
+  name: string;
 
   @Column({ type: 'varchar' })
-  quantity: string;
+  type: string;
 
   @Column({ type: 'varchar' })
-  package_type: string;
+  alcohol_content: string;
+
+  @Column({ type: 'varchar' })
+  packaging: string;
 
   @Column({ type: 'varchar' })
   volume: string;
 
-  @Column({ type: 'varchar' })
-  producer: string;
+  @Column({ type: 'int' })
+  net_price: number;
 
-  @Column({ type: 'varchar' })
-  sku: string;
+  @Column({ type: 'int' })
+  vat: number;
+  
+  @Column({ type: 'int' })
+  gross_price: number;
 
-  @Column({ type: 'varchar' })
-  title: string;
+  @Column({ type: 'int' })
+  wrappage_net_price: number;
 
-  @Column({ type: 'varchar' })
-  type: string;
+  @Column({ type: 'int' })
+  wrappage_gross_price: number;
+
+  @Column({ type: 'text' })
+  description: string;
+
+  @ManyToOne( () => Category, category => category.products )
+  category: Category;
 }

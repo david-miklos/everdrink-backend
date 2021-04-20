@@ -15,6 +15,7 @@ export class User {
   @Column({
     type: 'enum',
     enum: Role,
+    default: Role.GUEST,
   })
   role: Role;
   @BeforeInsert() async hashPassword() {

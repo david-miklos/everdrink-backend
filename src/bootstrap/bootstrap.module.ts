@@ -1,11 +1,11 @@
-import { Module } from "@nestjs/common";
+import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConnectionOptions } from 'typeorm';
 import AppConfig from '../config/app.config';
 import { MulterModule } from '@nestjs/platform-express';
 import { MulterOptions } from '@nestjs/platform-express/multer/interfaces/multer-options.interface';
-import { JwtModule, JwtModuleOptions } from "@nestjs/jwt";
+import { JwtModule, JwtModuleOptions } from '@nestjs/jwt';
 
 @Module({
   imports: [
@@ -37,11 +37,6 @@ import { JwtModule, JwtModuleOptions } from "@nestjs/jwt";
   ],
   controllers: [],
   providers: [],
-  exports: [
-    ConfigModule,
-    TypeOrmModule,
-    JwtModule,
-    MulterModule,
-  ],
+  exports: [ConfigModule, TypeOrmModule, JwtModule, MulterModule],
 })
 export class BootstrapModule {}

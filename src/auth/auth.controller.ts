@@ -13,7 +13,7 @@ export class AuthController {
   constructor(private authService: AuthService) {}
 
   @Public()
-  @Post('sign_up')
+  @Post('signup')
   async signUp(
     @Body() createUserDto: CreateUserDto,
   ): Promise<RegistrationStatus> {
@@ -28,7 +28,7 @@ export class AuthController {
 
   @Public()
   @UseGuards(LocalAuthGuard)
-  @Post('sign_in')
+  @Post('signin')
   async signIn(@Body() loginUserDto: LoginUserDto): Promise<SignInStatusInterface> {
     return this.authService.signIn(loginUserDto);
   }

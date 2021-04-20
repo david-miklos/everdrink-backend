@@ -3,7 +3,9 @@ import { Product } from '../product/entities/product.entity';
 import { ProductDto } from '../product/dto/product.dto';
 import { User } from '../user/entities/user.entity';
 import { UserDto } from '../user/dto/user.dto';
-import { LoginUserDto } from "../user/dto/user.login.dto";
+import { LoginUserDto } from '../user/dto/user.login.dto';
+import { Category } from 'src/category/entities/category.entity';
+import { CategoryDto } from 'src/category/dto/category.dto';
 
 export const comparePasswords = async (userPassword, currentPassword) => {
   return await bcrypt.compare(currentPassword, userPassword);
@@ -21,31 +23,50 @@ export const toLoginUserDto = (data: User): LoginUserDto => {
   return loginUserDto;
 };
 
+export const toCategoryDto = (data: Category): CategoryDto => {
+  const { id, name, display_name, description, order, products } = data;
+  const categoryDto: CategoryDto = {
+    id,
+    name,
+    display_name,
+    description,
+    order,
+    products,
+  };
+  return categoryDto;
+};
+
 export const toProductDto = (data: Product): ProductDto => {
   const {
     id,
-    description,
-    gsku,
-    quantity,
-    package_type,
-    volume,
-    producer,
-    sku,
-    title,
+    brand,
+    name,
     type,
+    alcohol_content,
+    packaging,
+    volume,
+    net_price,
+    vat,
+    gross_price,
+    wrappage_net_price,
+    wrappage_gross_price,
+    description,
   } = data;
 
   const productDto: ProductDto = {
     id,
-    description,
-    gsku,
-    quantity,
-    package_type,
-    volume,
-    producer,
-    sku,
-    title,
+    brand,
+    name,
     type,
+    alcohol_content,
+    packaging,
+    volume,
+    net_price,
+    vat,
+    gross_price,
+    wrappage_net_price,
+    wrappage_gross_price,
+    description,
   };
   return productDto;
 };
