@@ -7,6 +7,8 @@ import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
 import { BootstrapModule } from './bootstrap/bootstrap.module';
 import { CategoryModule } from './category/category.module';
+import { AddressController } from './address/address.controller';
+import { AddressModule } from './address/address.module';
 
 
 @Module({
@@ -16,6 +18,7 @@ import { CategoryModule } from './category/category.module';
     UserModule,
     ProductModule,
     CategoryModule,
+    AddressModule,
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -6,6 +6,8 @@ import { UserDto } from '../user/dto/user.dto';
 import { LoginUserDto } from '../user/dto/user.login.dto';
 import { Category } from 'src/category/entities/category.entity';
 import { CategoryDto } from 'src/category/dto/category.dto';
+import { AddressDto } from 'src/address/dto/address.dto';
+import { Address } from 'src/address/entities/address.entity';
 
 export const comparePasswords = async (userPassword, currentPassword) => {
   return await bcrypt.compare(currentPassword, userPassword);
@@ -34,6 +36,29 @@ export const toCategoryDto = (data: Category): CategoryDto => {
     products,
   };
   return categoryDto;
+};
+
+export const toAddressDto = (data: Address): AddressDto => {
+  const { id, phone, country, region, zip, city, street, street_number } = data;
+  const addressDto: AddressDto = {
+    id,
+    phone,
+    country,
+    region,
+    zip,
+    city,
+    street,
+    street_number,
+  };
+  return addressDto;
+};
+
+export const fetchCategoryProducts = (data: Category): ProductDto[] => {
+  const { id, name, display_name, description, order, products } = data;
+  const productsDto: ProductDto[] = products.map((product) =>
+    toProductDto(product),
+  );
+  return productsDto;
 };
 
 export const toProductDto = (data: Product): ProductDto => {

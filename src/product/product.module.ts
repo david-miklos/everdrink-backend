@@ -11,7 +11,7 @@ import { Category } from 'src/category/entities/category.entity';
 import { CategoryModule } from 'src/category/category.module';
 
 @Module({
-  imports: [CategoryModule,TypeOrmModule.forFeature([Product, Category])],
+  imports: [CategoryModule,TypeOrmModule.forFeature([Product])],
   controllers: [ProductController],
   providers: [ProductService],
   exports: [ProductService],

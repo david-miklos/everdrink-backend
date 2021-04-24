@@ -1,6 +1,7 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { toCategoryDto } from 'src/shared/utils';
+import { ProductDto } from 'src/product/dto/product.dto';
+import { fetchCategoryProducts, toCategoryDto } from 'src/shared/utils';
 import { Repository } from 'typeorm';
 import { CategoryCreateDto } from './dto/category.create.dto';
 import { CategoryDto } from './dto/category.dto';
@@ -13,48 +14,48 @@ export class CategoryService {
     private categoryRepository: Repository<Category>,
   ) {}
 
-  async getAllCategorys(): Promise<CategoryDto[]> {
-    const categorys = await this.categoryRepository.find({
+  async getCategories(): Promise<CategoryDto[]> {
+    const categories = await this.categoryRepository.find({
       order: {
         order: 'ASC',
       },
     });
-    return categorys.map((category) => toCategoryDto(category));
+    return categories.map((category) => toCategoryDto(category));
   }
 
-  async getAllCategorysWithProducts(): Promise<CategoryDto[]> {
-    const categorysWithProducts = await this.categoryRepository.find({
-      relations: ['products'],
-      order: {
-        order: 'ASC',
-      },
-    });
-    return categorysWithProducts.map((category) => toCategoryDto(category));
-  }
+  // async getAllProducts(): Promise<ProductDto[]> {
+  //   const categorysWithProducts = await this.categoryRepository.find({
+  //     relations: ['products'],
+  //     order: {
+  //       order: 'ASC',
+  //     },
+  //   });
+  //   return categorysWithProducts.map((category) => fetchCategoryProducts(category));
+  // }
 
-  async getOneCategory(name: string): Promise<CategoryDto> {
+  // async getOneCategory(name: string): Promise<CategoryDto> {
+  //   const category = await this.categoryRepository.findOne({
+  //     where: { name },
+  //   });
+
+  //   if (!category) {
+  //     throw new HttpException(`Category doesn't exist`, HttpStatus.BAD_REQUEST);
+  //   }
+
+  //   return toCategoryDto(category);
+  // }
+
+  async getProducts(name: string): Promise<ProductDto[]> {
     const category = await this.categoryRepository.findOne({
       where: { name },
+      relations: ['products'],
     });
 
     if (!category) {
       throw new HttpException(`Category doesn't exist`, HttpStatus.BAD_REQUEST);
     }
 
-    return toCategoryDto(category);
-  }
-
-  async getOneCategoryWithProducts(name: string): Promise<CategoryDto> {
-    const categoryWithProducts = await this.categoryRepository.findOne({
-      where: { name },
-      relations: ['products'],
-    });
-
-    if (!categoryWithProducts) {
-      throw new HttpException(`Category doesn't exist`, HttpStatus.BAD_REQUEST);
-    }
-
-    return toCategoryDto(categoryWithProducts);
+    return fetchCategoryProducts(category);
   }
 
   async createCategory(
