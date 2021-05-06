@@ -1,3 +1,4 @@
+import { Checkout } from 'src/checkout/entities/checkout.entity';
 import { User } from 'src/user/entities/user.entity';
 import {
   Entity,
@@ -34,4 +35,7 @@ export class Address {
 
   @ManyToOne( () => User, user => user.addresses )
   user: User;
+
+  @OneToMany(() => Checkout, (checkout) => checkout.address)
+  checkouts: Checkout[];
 }

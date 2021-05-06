@@ -8,6 +8,8 @@ import {
 import * as bcrypt from 'bcrypt';
 import { Role } from '../role.enum';
 import { Address } from 'src/address/entities/address.entity';
+import { Order } from 'src/order/entities/order.entity';
+import { Checkout } from 'src/checkout/entities/checkout.entity';
 @Entity('user')
 export class User {
   @PrimaryGeneratedColumn('uuid')
@@ -28,6 +30,9 @@ export class User {
 
   @OneToMany(() => Address, (address) => address.user)
   addresses: Address[];
+
+  @OneToMany(() => Checkout, (checkout) => checkout.user)
+  checkouts: Checkout[];
 
   @BeforeInsert() async hashPassword() {
     this.password = await bcrypt.hash(this.password, 10);

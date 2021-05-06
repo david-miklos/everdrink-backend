@@ -6,8 +6,11 @@ import { UserDto } from '../user/dto/user.dto';
 import { LoginUserDto } from '../user/dto/user.login.dto';
 import { Category } from 'src/category/entities/category.entity';
 import { CategoryDto } from 'src/category/dto/category.dto';
-import { AddressDto } from 'src/address/dto/address.dto';
 import { Address } from 'src/address/entities/address.entity';
+import { Checkout } from 'src/checkout/entities/checkout.entity';
+import { CheckoutDto } from 'src/checkout/dto/checkout.dto';
+import { OrderDto } from 'src/order/dto/order.dto';
+import { Order } from 'src/order/entities/order.entity';
 
 export const comparePasswords = async (userPassword, currentPassword) => {
   return await bcrypt.compare(currentPassword, userPassword);
@@ -36,29 +39,6 @@ export const toCategoryDto = (data: Category): CategoryDto => {
     products,
   };
   return categoryDto;
-};
-
-export const toAddressDto = (data: Address): AddressDto => {
-  const { id, phone, country, region, zip, city, street, street_number } = data;
-  const addressDto: AddressDto = {
-    id,
-    phone,
-    country,
-    region,
-    zip,
-    city,
-    street,
-    street_number,
-  };
-  return addressDto;
-};
-
-export const fetchCategoryProducts = (data: Category): ProductDto[] => {
-  const { id, name, display_name, description, order, products } = data;
-  const productsDto: ProductDto[] = products.map((product) =>
-    toProductDto(product),
-  );
-  return productsDto;
 };
 
 export const toProductDto = (data: Product): ProductDto => {
@@ -97,14 +77,14 @@ export const toProductDto = (data: Product): ProductDto => {
 };
 
 export const fileFilter = (req, file, callback) => {
-  if (!file.originalname.match(/\.(jpg|jpeg|png|pdf)$/)) {
-    return callback(new Error('Only image or pdf files are allowed!'), false);
+  if (!file.originalname.match(/\.(png)$/)) {
+    return callback(new Error('Only png files are allowed!'), false);
   }
   callback(null, true);
 };
 
 export const editFileName = (req, file, callback) => {
-  const name = req.user.email.split('@')[0];
+  const name = req.user.id;
   const fileExtName = file.originalname.split('.')[1];
   callback(null, `${name}.${fileExtName}`);
 };

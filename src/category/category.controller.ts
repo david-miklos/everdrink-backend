@@ -23,11 +23,11 @@ export class CategoryController {
     return await this.categoryService.getCategories();
   }
 
-  @Public()
-  @Get(':name')
-  async getProducts(@Param('name') name: string): Promise<ProductDto[]> {
-    return await this.categoryService.getProducts(name);
-  }
+  // @Public()
+  // @Get(':name')
+  // async getProducts(@Param('name') name: string): Promise<ProductDto[]> {
+  //   return await this.categoryService.getProducts(name);
+  // }
 
   // @Public()
   // @Get('products')

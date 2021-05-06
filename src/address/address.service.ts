@@ -1,11 +1,10 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { toAddressDto } from 'src/shared/utils';
+import { OrderService } from 'src/order/order.service';
 import { User } from 'src/user/entities/user.entity';
 import { UserService } from 'src/user/user.service';
 import { Repository } from 'typeorm';
 import { AddressCreateDto } from './dto/address.create.dto';
-import { AddressDto } from './dto/address.dto';
 import { Address } from './entities/address.entity';
 
 @Injectable()
@@ -16,14 +15,40 @@ export class AddressService {
     private userService: UserService,
   ) {}
 
-  async getAddresses(): Promise<AddressDto[]> {
+  async getAll(): Promise<Address[]> {
     const addresses = await this.addressRepository.find();
-    return addresses.map((address) => toAddressDto(address));
+    return addresses;
   }
 
-  async createAddress(addressCreateDto: AddressCreateDto): Promise<AddressDto> {
+  async getOne(id: string): Promise<Address> {
+    const address = await this.addressRepository.findOne({
+      where: {
+        id: id,
+      },
+    });
+    return address;
+  }
+
+  async getByUser(userId: string): Promise<Address[]> {
+    const address = await this.addressRepository.find({
+      where: { user: userId },
+    });
+    return address;
+  }
+
+  async getAdmin(): Promise<Address[]> {
+    const admin = await this.userService.getAdmin();
+    const address = await this.addressRepository.find({
+      where: { user: admin },
+    });
+    return address;
+  }
+
+  async createAddress(
+    userId: string,
+    addressCreateDto: AddressCreateDto,
+  ): Promise<Address> {
     const {
-      email,
       phone,
       country,
       region,
@@ -32,7 +57,7 @@ export class AddressService {
       street,
       street_number,
     } = addressCreateDto;
-    const user: User = await this.userService.findForValidation(email);
+    const user: User = await this.userService.getOneUser(userId);
     const address: Address = await this.addressRepository.create({
       phone,
       country,
@@ -45,27 +70,24 @@ export class AddressService {
     });
     await this.addressRepository.save(address);
 
-    return toAddressDto(address);
+    return address;
   }
 
-  async updateAddress(
-    id: string,
-    addressDto: AddressDto,
-  ): Promise<AddressDto> {
-    let address: Address = await this.addressRepository.findOne({
-      where: { id },
-    });
+  // async updateAddress(id: string, addressDto: AddressDto): Promise<AddressDto> {
+  //   let address: Address = await this.addressRepository.findOne({
+  //     where: { id },
+  //   });
 
-    if (!address) {
-      throw new HttpException(`address doesn't exist`, HttpStatus.BAD_REQUEST);
-    }
+  //   if (!address) {
+  //     throw new HttpException(`address doesn't exist`, HttpStatus.BAD_REQUEST);
+  //   }
 
-    await this.addressRepository.update(id, addressDto); // update
+  //   await this.addressRepository.update(id, addressDto); // update
 
-    return toAddressDto(address);
-  }
+  //   return toAddressDto(address);
+  // }
 
-  async deleteAddress(id: string): Promise<AddressDto> {
+  async deleteAddress(id: string): Promise<Address> {
     const address: Address = await this.addressRepository.findOne({
       where: { id },
     });
@@ -73,9 +95,9 @@ export class AddressService {
     if (!address) {
       throw new HttpException(`address doesn't exist`, HttpStatus.BAD_REQUEST);
     }
-      
+
     await this.addressRepository.delete(id); // delete todo list
 
-    return toAddressDto(address);
+    return address;
   }
 }

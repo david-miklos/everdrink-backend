@@ -10,9 +10,8 @@ import {
 import { ProductService } from './product.service';
 import { ProductCreateDto } from './dto/product.create.dto';
 import { ProductDto } from './dto/product.dto';
-import { Role } from '../user/role.enum';
-import { Roles } from '../auth/decorators/roles.decorator';
 import { Public } from 'src/auth/decorators/routes.decorator';
+
 
 @Controller('product')
 export class ProductController {
@@ -21,13 +20,34 @@ export class ProductController {
   @Public()
   @Get('')
   async findAll(): Promise<ProductDto[]> {
-    return await this.productService.getAllProducts();
+    return await this.productService.getAll();
   }
 
+  @Public()
   @Get(':id/get')
   async findOne(@Param('id') id: string): Promise<ProductDto> {
-    return await this.productService.getOneProduct(id);
+    return await this.productService.getOne(id);
   }
+
+  // @Public()
+  // @Get(':categoryId/brands')
+  // async getBrands(@Param('categoryId') categoryId: string): Promise<any> {
+  //   return await this.productService.getBrandsByCategory(categoryId);
+  // }
+
+  // @Public()
+  // @Get(':categoryId/packaging')
+  // async getPackaging(@Param('categoryId') categoryId: string): Promise<any> {
+  //   return await this.productService.getPackageingByCategory(categoryId);
+  // }
+
+  @Public()
+  @Get(':categoryId/category')
+  async findAllWithCategory(@Param('categoryId') categoryId: string): Promise<any> {
+    return await this.productService.getAllByCatgory(categoryId);
+  }
+
+
   @Public()
   //@Roles(Role.ADMIN)
   @Post(':name/create')

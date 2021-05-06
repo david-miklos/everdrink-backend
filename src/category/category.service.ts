@@ -1,7 +1,7 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ProductDto } from 'src/product/dto/product.dto';
-import { fetchCategoryProducts, toCategoryDto } from 'src/shared/utils';
+import { toCategoryDto } from 'src/shared/utils';
 import { Repository } from 'typeorm';
 import { CategoryCreateDto } from './dto/category.create.dto';
 import { CategoryDto } from './dto/category.dto';
@@ -45,18 +45,31 @@ export class CategoryService {
   //   return toCategoryDto(category);
   // }
 
-  async getProducts(name: string): Promise<ProductDto[]> {
-    const category = await this.categoryRepository.findOne({
-      where: { name },
-      relations: ['products'],
-    });
+  // async getProducts(name: string): Promise<ProductDto[]> {
+  //   const category = await this.categoryRepository.findOne({
+  //     where: { name },
+  //     relations: ['products'],
+  //   });
 
-    if (!category) {
-      throw new HttpException(`Category doesn't exist`, HttpStatus.BAD_REQUEST);
-    }
+  //   if (!category) {
+  //     throw new HttpException(`Category doesn't exist`, HttpStatus.BAD_REQUEST);
+  //   }
 
-    return fetchCategoryProducts(category);
-  }
+  //   return fetchCategoryProducts(category);
+  // }
+
+  // async getProductTypes(name: string): Promise<ProductDto[]> {
+  //   const category = await this.categoryRepository.findOne({
+  //     where: { name },
+  //     relations: ['products'],
+  //   });
+
+  //   if (!category) {
+  //     throw new HttpException(`Category doesn't exist`, HttpStatus.BAD_REQUEST);
+  //   }
+
+  //   return fetchCategoryProducts(category);
+  // }
 
   async createCategory(
     categoryCreateDto: CategoryCreateDto,
@@ -76,7 +89,6 @@ export class CategoryService {
   ): Promise<CategoryDto> {
     let category: Category = await this.categoryRepository.findOne({
       where: { id },
-      relations: ['products'],
     });
 
     if (!category) {

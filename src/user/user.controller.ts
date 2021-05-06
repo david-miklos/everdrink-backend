@@ -22,13 +22,24 @@ import { Public } from 'src/auth/decorators/routes.decorator';
 export class UserController {
   constructor(private userService: UserService) {}
 
-  @Public()
-  //@Roles(Role.ADMIN)
+  @Roles(Role.ADMIN)
   @Get('')
   async findAll(): Promise<UserDto[]> {
     return await this.userService.getAllUsers();
   }
-  
+
+  @Roles(Role.ADMIN)
+  @Get('guests')
+  async findGuests(): Promise<UserDto[]> {
+    return await this.userService.getGuests();
+  }
+
+  @Roles(Role.ADMIN)
+  @Get(':checkoutId/checkout')
+  async findByCheckout(@Param('checkoutId') checkoutId: string): Promise<UserDto> {
+    return await this.userService.getByCheckout(checkoutId);
+  }
+
   @Public()
   //@Roles(Role.ADMIN)
   @Get(':id')
@@ -39,13 +50,10 @@ export class UserController {
   @Public()
   // @Roles(Role.ADMIN)
   @Put(':id/update_role')
-  async update(
-    @Param('id') id: string,
-    @Body() userRoleDto: UserRoleDto,
-  ): Promise<UserDto> {
-    return await this.userService.updateUserRole(id, userRoleDto);
+  async update(@Param('id') id: string): Promise<UserDto> {
+    return await this.userService.updateUserRole(id);
   }
-  
+
   //@Roles(Role.ADMIN)
   @Delete(':id/delete')
   async delete(@Param('id') id: string): Promise<UserDto> {
@@ -59,8 +67,10 @@ export class UserController {
     return { originalname, mimetype };
   }
 
+  @Roles(Role.ADMIN)
   @Get(':filepath/getfile')
   seeUploadedFile(@Param('filepath') file, @Res() res) {
+    // return res.sendFile(file, { root: './uploads' });
     return res.sendFile(file, { root: './uploads' });
   }
 }

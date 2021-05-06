@@ -15,12 +15,12 @@ export class ProductService {
     private productRepository: Repository<Product>,
     private categoryService: CategoryService,
   ) {}
-  async getAllProducts(): Promise<ProductDto[]> {
+  async getAll(): Promise<ProductDto[]> {
     const products = await this.productRepository.find();
     return products.map((product) => toProductDto(product));
   }
 
-  async getOneProduct(id: string): Promise<ProductDto> {
+  async getOne(id: string): Promise<ProductDto> {
     const product = await this.productRepository.findOne({
       where: { id },
     });
@@ -31,6 +31,33 @@ export class ProductService {
 
     return toProductDto(product);
   }
+
+
+  async getAllByCatgory(categoryId: string): Promise<ProductDto[]> {
+
+    const products = await this.productRepository.find({
+      where: { category: categoryId },
+    });
+    return products.map((product) => toProductDto(product));
+  }
+
+  // async getBrandsByCategory(categoryId: string): Promise<string[]> {
+  //   const products = await this.productRepository.find({
+  //     where: { category: categoryId },
+  //   });
+
+  //   return toBrandSet(products);
+  // }
+
+  // async getPackageingByCategory(categoryId: string): Promise<string[]> {
+  //   const products = await this.productRepository.find({
+  //     where: { category: categoryId },
+  //   });
+
+  //   return toPackagingSet(products);
+  // }
+
+
 
   async createProduct(
     categoryName: string,

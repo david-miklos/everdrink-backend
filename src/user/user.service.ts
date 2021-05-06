@@ -7,6 +7,7 @@ import { UserDto } from './dto/user.dto';
 import { CreateUserDto } from './dto/user.create.dto';
 import { comparePasswords, toLoginUserDto, toUserDto } from '../shared/utils';
 import { UserRoleDto } from './dto/user.role.dto';
+import { Role } from './role.enum';
 
 @Injectable()
 export class UserService {
@@ -63,7 +64,22 @@ export class UserService {
     return users.map((user) => toUserDto(user));
   }
 
-  async getOneUser(id: string): Promise<UserDto> {
+  async getByCheckout(checkoutId: string): Promise<User> {
+    const orders = await this.userRepository.findOne({
+      where: { checkout: checkoutId },
+      // relations:['product','checkout']
+    });
+    return orders;
+  }
+
+  async getGuests(): Promise<UserDto[]> {
+    const users = await this.userRepository.find({
+      where: { role: Role.GUEST },
+    });
+    return users.map((user) => toUserDto(user));
+  }
+
+  async getOneUser(id: string): Promise<User> {
     const user = await this.userRepository.findOne({
       where: { id },
     });
@@ -72,10 +88,22 @@ export class UserService {
       throw new HttpException(`User doesn't exist`, HttpStatus.BAD_REQUEST);
     }
 
-    return toUserDto(user);
+    return user;
   }
 
-  async updateUserRole(id: string, userRoleDto: UserRoleDto): Promise<UserDto> {
+  async getAdmin(): Promise<User> {
+    const user = await this.userRepository.findOne({
+      where: { role: Role.ADMIN },
+    });
+
+    if (!user) {
+      throw new HttpException(`User doesn't exist`, HttpStatus.BAD_REQUEST);
+    }
+
+    return user;
+  }
+
+  async updateUserRole(id: string): Promise<UserDto> {
     const user: User = await this.userRepository.findOne({
       where: { id },
     });
@@ -84,7 +112,9 @@ export class UserService {
       throw new HttpException(`User doesn't exist`, HttpStatus.BAD_REQUEST);
     }
 
-    await this.userRepository.update(id, userRoleDto);
+    await this.userRepository.update(id, {
+      role: Role.PARTNER,
+    });
 
     return toUserDto(user);
   }

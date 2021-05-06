@@ -1,5 +1,4 @@
 export class AddressCreateDto {
-    email: string;
     phone: string;
     country: string;
     region: string;

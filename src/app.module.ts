@@ -9,6 +9,8 @@ import { BootstrapModule } from './bootstrap/bootstrap.module';
 import { CategoryModule } from './category/category.module';
 import { AddressController } from './address/address.controller';
 import { AddressModule } from './address/address.module';
+import { OrderModule } from './order/order.module';
+import { CheckoutModule } from './checkout/checkout.module';
 
 
 @Module({
@@ -19,6 +21,8 @@ import { AddressModule } from './address/address.module';
     ProductModule,
     CategoryModule,
     AddressModule,
+    CheckoutModule,
+    OrderModule,
   ],
   controllers: [AppController],
   providers: [AppService],
