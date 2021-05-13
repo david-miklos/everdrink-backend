@@ -6,18 +6,14 @@ import {
   Injectable,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { check } from 'prettier';
 import { AddressService } from 'src/address/address.service';
 import { Address } from 'src/address/entities/address.entity';
 import { OrderService } from 'src/order/order.service';
-// import { toCheckoutDto } from 'src/shared/utils';
 import { User } from 'src/user/entities/user.entity';
 import { UserService } from 'src/user/user.service';
 import { Repository } from 'typeorm';
 import { CreateCheckoutDto } from './dto/checkout.create.dto';
-import { CheckoutDto } from './dto/checkout.dto';
 import { Checkout } from './entities/checkout.entity';
-import { Shipping } from './shipping.enum';
 
 @Injectable()
 export class CheckoutService {
@@ -27,23 +23,22 @@ export class CheckoutService {
     private userService: UserService,
     @Inject(forwardRef(() => AddressService))
     private addressService: AddressService,
-    @Inject(forwardRef(() => OrderService)) private orderService: OrderService,
   ) {}
 
-  async getAll(): Promise<any> {
+  async findAll(): Promise<Checkout[]> {
     const checkouts = await this.checkoutRepository.find({
       relations: ['user', 'address', 'orders', 'orders.product'],
     });
     return checkouts;
   }
 
-  async getOne(id: string): Promise<Checkout> {
+  async findOne(id: string): Promise<Checkout> {
     const checkout = await this.checkoutRepository.findOne({
       where: { id },
     });
 
     if (!checkout) {
-      throw new HttpException(`Product doesn't exist`, HttpStatus.BAD_REQUEST);
+      throw new HttpException(`Checkout not found`, HttpStatus.NOT_FOUND);
     }
 
     return checkout;
@@ -54,8 +49,8 @@ export class CheckoutService {
     createCheckoutDto: CreateCheckoutDto,
   ): Promise<Checkout> {
     const { shipping, addressId } = createCheckoutDto;
-    const user: User = await this.userService.getOneUser(userId);
-    const address: Address = await this.addressService.getOne(addressId);
+    const user: User = await this.userService.findOne(userId);
+    const address: Address = await this.addressService.findOne(addressId);
     const checkout: Checkout = await this.checkoutRepository.create({
       shipping,
       user,
@@ -65,16 +60,12 @@ export class CheckoutService {
     return checkout;
   }
 
-  async updateCheckout(): Promise<Checkout> {
-    return;
-  }
-
   async deleteCheckout(id: string): Promise<Checkout> {
     const checkout: Checkout = await this.checkoutRepository.findOne({
       where: { id },
     });
     if (!checkout) {
-      throw new HttpException(`Checkout doesn't exist`, HttpStatus.BAD_REQUEST);
+      throw new HttpException(`Checkout not found`, HttpStatus.NOT_FOUND);
     }
 
     await this.checkoutRepository.delete(id);

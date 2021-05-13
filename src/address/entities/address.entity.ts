@@ -33,7 +33,7 @@ export class Address {
   @Column({ type: 'varchar' })
   street_number: string;
 
-  @ManyToOne( () => User, user => user.addresses )
+  @ManyToOne( () => User, user => user.addresses ,{ onDelete: 'CASCADE' })
   user: User;
 
   @OneToMany(() => Checkout, (checkout) => checkout.address)

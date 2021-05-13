@@ -1,5 +1,4 @@
 import {
-  Body,
   Controller,
   Delete,
   Get,
@@ -13,7 +12,6 @@ import {
 import { UserService } from './user.service';
 import { UserDto } from './dto/user.dto';
 import { Role } from './role.enum';
-import { UserRoleDto } from './dto/user.role.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { Roles } from '../auth/decorators/roles.decorator';
 import { Public } from 'src/auth/decorators/routes.decorator';
@@ -24,42 +22,43 @@ export class UserController {
 
   @Roles(Role.ADMIN)
   @Get('')
-  async findAll(): Promise<UserDto[]> {
-    return await this.userService.getAllUsers();
+  async getAll(): Promise<UserDto[]> {
+    return await this.userService.findAll();
   }
 
   @Roles(Role.ADMIN)
   @Get('guests')
-  async findGuests(): Promise<UserDto[]> {
-    return await this.userService.getGuests();
+  async getGuests(): Promise<UserDto[]> {
+    return await this.userService.findGuests();
   }
 
   @Roles(Role.ADMIN)
   @Get(':checkoutId/checkout')
-  async findByCheckout(@Param('checkoutId') checkoutId: string): Promise<UserDto> {
-    return await this.userService.getByCheckout(checkoutId);
+  async getByCheckout(
+    @Param('checkoutId') checkoutId: string,
+  ): Promise<UserDto> {
+    return await this.userService.findByCheckout(checkoutId);
   }
 
-  @Public()
-  //@Roles(Role.ADMIN)
-  @Get(':id')
-  async findOne(@Param('id') id: string): Promise<UserDto> {
-    return await this.userService.getOneUser(id);
+  @Roles(Role.ADMIN)
+  @Get(':id/get')
+  async getOne(@Param('id') id: string): Promise<UserDto> {
+    return await this.userService.findOne(id);
   }
 
-  @Public()
-  // @Roles(Role.ADMIN)
-  @Put(':id/update_role')
-  async update(@Param('id') id: string): Promise<UserDto> {
-    return await this.userService.updateUserRole(id);
+  @Roles(Role.ADMIN)
+  @Put(':id/approve')
+  async updateRole(@Param('id') id: string): Promise<UserDto> {
+    return await this.userService.updateRole(id);
   }
 
-  //@Roles(Role.ADMIN)
+  @Roles(Role.ADMIN)
   @Delete(':id/delete')
   async delete(@Param('id') id: string): Promise<UserDto> {
-    return await this.userService.deleteUser(id);
+    return await this.userService.delete(id);
   }
 
+  @Roles(Role.GUEST, Role.PARTNER)
   @Post('upload')
   @UseInterceptors(FileInterceptor('file'))
   async uploadFile(@UploadedFile() file: Express.Multer.File): Promise<Object> {
@@ -67,10 +66,9 @@ export class UserController {
     return { originalname, mimetype };
   }
 
-  @Roles(Role.ADMIN)
+  @Public()
   @Get(':filepath/getfile')
-  seeUploadedFile(@Param('filepath') file, @Res() res) {
-    // return res.sendFile(file, { root: './uploads' });
+  getFile(@Param('filepath') file, @Res() res) {
     return res.sendFile(file, { root: './uploads' });
   }
 }

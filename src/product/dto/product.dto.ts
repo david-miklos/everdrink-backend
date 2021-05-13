@@ -1,6 +1,3 @@
-import { CategoryDto } from "src/category/dto/category.dto";
-import { Category } from "src/category/entities/category.entity";
-
 export class ProductDto {
   id: string;
   brand: string;

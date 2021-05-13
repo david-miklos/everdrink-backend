@@ -11,7 +11,8 @@ import { ProductService } from './product.service';
 import { ProductCreateDto } from './dto/product.create.dto';
 import { ProductDto } from './dto/product.dto';
 import { Public } from 'src/auth/decorators/routes.decorator';
-
+import { Roles } from 'src/auth/decorators/roles.decorator';
+import { Role } from 'src/user/role.enum';
 
 @Controller('product')
 export class ProductController {
@@ -19,58 +20,45 @@ export class ProductController {
 
   @Public()
   @Get('')
-  async findAll(): Promise<ProductDto[]> {
-    return await this.productService.getAll();
+  async getAll(): Promise<ProductDto[]> {
+    return await this.productService.findAll();
   }
 
   @Public()
   @Get(':id/get')
-  async findOne(@Param('id') id: string): Promise<ProductDto> {
-    return await this.productService.getOne(id);
+  async getOne(@Param('id') id: string): Promise<ProductDto> {
+    return await this.productService.findOne(id);
   }
-
-  // @Public()
-  // @Get(':categoryId/brands')
-  // async getBrands(@Param('categoryId') categoryId: string): Promise<any> {
-  //   return await this.productService.getBrandsByCategory(categoryId);
-  // }
-
-  // @Public()
-  // @Get(':categoryId/packaging')
-  // async getPackaging(@Param('categoryId') categoryId: string): Promise<any> {
-  //   return await this.productService.getPackageingByCategory(categoryId);
-  // }
 
   @Public()
   @Get(':categoryId/category')
-  async findAllWithCategory(@Param('categoryId') categoryId: string): Promise<any> {
-    return await this.productService.getAllByCatgory(categoryId);
+  async getAllByCategory(
+    @Param('categoryId') categoryId: string,
+  ): Promise<ProductDto[]> {
+    return await this.productService.findAllByCategory(categoryId);
   }
 
-
-  @Public()
-  //@Roles(Role.ADMIN)
-  @Post(':name/create')
+  @Roles(Role.ADMIN)
+  @Post(':categoryId/create')
   async create(
     @Body() productCreateDto: ProductCreateDto,
-    @Param('name') categoryName: string,
+    @Param('categoryId') categoryId: string,
   ): Promise<ProductDto> {
-    return await this.productService.createProduct(categoryName,productCreateDto);
+    return await this.productService.create(categoryId, productCreateDto);
   }
 
-  @Public()
-  //@Roles(Role.ADMIN)
+  @Roles(Role.ADMIN)
   @Put(':id/update')
   async update(
     @Param('id') id: string,
     @Body() productDto: ProductDto,
   ): Promise<ProductDto> {
-    return await this.productService.updateProduct(id, productDto);
+    return await this.productService.update(id, productDto);
   }
-  @Public()
-  //@Roles(Role.ADMIN)
+
+  @Roles(Role.ADMIN)
   @Delete(':id/delete')
   async delete(@Param('id') id: string): Promise<ProductDto> {
-    return await this.productService.deleteProduct(id);
+    return await this.productService.delete(id);
   }
 }

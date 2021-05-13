@@ -8,7 +8,9 @@ import {
   Put,
   Req,
 } from '@nestjs/common';
+import { Roles } from 'src/auth/decorators/roles.decorator';
 import { Public } from 'src/auth/decorators/routes.decorator';
+import { Role } from 'src/user/role.enum';
 import { CreateOrderDto } from './dto/order.create.dto';
 import { Order } from './entities/order.entity';
 import { OrderService } from './order.service';
@@ -17,36 +19,28 @@ import { OrderService } from './order.service';
 export class OrderController {
   constructor(private orderService: OrderService) {}
 
-  @Public()
+  @Roles(Role.ADMIN)
   @Get('')
-  async findAll(): Promise<Order[]> {
-    return await this.orderService.getAll();
+  async getAll(): Promise<Order[]> {
+    return await this.orderService.findAll();
   }
 
-  @Public()
+  @Roles(Role.ADMIN)
   @Get(':checkoutId/checkout')
-  async findByCheckout(@Param('checkoutId') checkoutId: string): Promise<Order[]> {
-    return await this.orderService.getByCheckout(checkoutId);
+  async getByCheckout(@Param('checkoutId') checkoutId: string): Promise<Order[]> {
+    return await this.orderService.findByCheckout(checkoutId);
   }
 
-  //@Roles(Role.ADMIN)
+  @Roles(Role.PARTNER)
   @Post('/create')
   async create(@Body() createOrderDto: CreateOrderDto,): Promise<Order> {
     // const email = req.user.email;
-    return await this.orderService.createOrder(createOrderDto);
+    return await this.orderService.create(createOrderDto);
   }
-
-  // @Public()
-  // //@Roles(Role.ADMIN)
-  // @Put(':id/update')
-  // async update(): Promise<Order> {
-  //   return await this.orderService.updateOrder();
-  // }
   
-  @Public()
-  //@Roles(Role.ADMIN)
+  @Roles(Role.ADMIN)
   @Delete(':id/delete')
   async delete(@Param('id') id: string): Promise<Order> {
-    return await this.orderService.deleteOrder(id);
+    return await this.orderService.delete(id);
   }
 }

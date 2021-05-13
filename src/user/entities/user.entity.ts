@@ -8,7 +8,6 @@ import {
 import * as bcrypt from 'bcrypt';
 import { Role } from '../role.enum';
 import { Address } from 'src/address/entities/address.entity';
-import { Order } from 'src/order/entities/order.entity';
 import { Checkout } from 'src/checkout/entities/checkout.entity';
 @Entity('user')
 export class User {

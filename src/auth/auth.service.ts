@@ -4,7 +4,6 @@ import { comparePasswords } from '../shared/utils';
 import { JwtService } from '@nestjs/jwt';
 import { CreateUserDto } from '../user/dto/user.create.dto';
 import { RegistrationStatus } from './interfaces/registration.status.interface';
-import { UserDto } from '../user/dto/user.dto';
 import { SignInStatusInterface } from './interfaces/sign.in.status.interface';
 import { LoginUserDto } from '../user/dto/user.login.dto';
 
@@ -16,7 +15,7 @@ export class AuthService {
   ) {}
 
   async validateUser(email: string, password: string): Promise<any>{
-    const user = await this.userService.findForValidation(email);
+    const user = await this.userService.findByEmail(email);
     const areEqual = await comparePasswords(user.password, password);
 
     if (user && areEqual) {

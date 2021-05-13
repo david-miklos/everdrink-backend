@@ -3,10 +3,9 @@ import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Product } from './entities/product.entity';
 import { ProductCreateDto } from './dto/product.create.dto';
-import { toProductDto } from '../shared/utils';
 import { ProductDto } from './dto/product.dto';
-import { Category } from 'src/category/entities/category.entity';
 import { CategoryService } from 'src/category/category.service';
+import { toProductDto } from 'src/shared/mappers';
 
 @Injectable()
 export class ProductService {
@@ -15,52 +14,32 @@ export class ProductService {
     private productRepository: Repository<Product>,
     private categoryService: CategoryService,
   ) {}
-  async getAll(): Promise<ProductDto[]> {
+  async findAll(): Promise<ProductDto[]> {
     const products = await this.productRepository.find();
     return products.map((product) => toProductDto(product));
   }
 
-  async getOne(id: string): Promise<ProductDto> {
+  async findOne(id: string): Promise<ProductDto> {
     const product = await this.productRepository.findOne({
       where: { id },
     });
 
     if (!product) {
-      throw new HttpException(`Product doesn't exist`, HttpStatus.BAD_REQUEST);
+      throw new HttpException(`Product not found`, HttpStatus.NOT_FOUND);
     }
 
     return toProductDto(product);
   }
 
-
-  async getAllByCatgory(categoryId: string): Promise<ProductDto[]> {
-
+  async findAllByCategory(categoryId: string): Promise<ProductDto[]> {
     const products = await this.productRepository.find({
       where: { category: categoryId },
     });
     return products.map((product) => toProductDto(product));
   }
 
-  // async getBrandsByCategory(categoryId: string): Promise<string[]> {
-  //   const products = await this.productRepository.find({
-  //     where: { category: categoryId },
-  //   });
-
-  //   return toBrandSet(products);
-  // }
-
-  // async getPackageingByCategory(categoryId: string): Promise<string[]> {
-  //   const products = await this.productRepository.find({
-  //     where: { category: categoryId },
-  //   });
-
-  //   return toPackagingSet(products);
-  // }
-
-
-
-  async createProduct(
-    categoryName: string,
+  async create(
+    categoryId: string,
     productCreateDto: ProductCreateDto,
   ): Promise<ProductDto> {
     const {
@@ -78,7 +57,9 @@ export class ProductService {
       description,
     } = productCreateDto;
 
-    const category = await this.categoryService.getCategoryForProduct(categoryName);
+    const category = await this.categoryService.findOne(
+      categoryId,
+    );
 
     const product: Product = await this.productRepository.create({
       brand,
@@ -93,7 +74,7 @@ export class ProductService {
       wrappage_net_price,
       wrappage_gross_price,
       description,
-      category
+      category,
     });
 
     await this.productRepository.save(product);
@@ -101,13 +82,13 @@ export class ProductService {
     return toProductDto(product);
   }
 
-  async updateProduct(id: string, productDto: ProductDto): Promise<ProductDto> {
+  async update(id: string, productDto: ProductDto): Promise<ProductDto> {
     let product: Product = await this.productRepository.findOne({
       where: { id },
     });
 
     if (!product) {
-      throw new HttpException(`Product doesn't exist`, HttpStatus.BAD_REQUEST);
+      throw new HttpException(`Product not found`, HttpStatus.NOT_FOUND);
     }
 
     await this.productRepository.update(id, productDto);
@@ -115,13 +96,13 @@ export class ProductService {
     return toProductDto(product);
   }
 
-  async deleteProduct(id: string): Promise<ProductDto> {
+  async delete(id: string): Promise<ProductDto> {
     const product: Product = await this.productRepository.findOne({
       where: { id },
     });
 
     if (!product) {
-      throw new HttpException(`Product doesn't exist`, HttpStatus.BAD_REQUEST);
+      throw new HttpException(`Product not found`, HttpStatus.NOT_FOUND);
     }
 
     await this.productRepository.delete(id);

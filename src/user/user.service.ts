@@ -5,9 +5,8 @@ import { LoginUserDto } from './dto/user.login.dto';
 import { User } from './entities/user.entity';
 import { UserDto } from './dto/user.dto';
 import { CreateUserDto } from './dto/user.create.dto';
-import { comparePasswords, toLoginUserDto, toUserDto } from '../shared/utils';
-import { UserRoleDto } from './dto/user.role.dto';
 import { Role } from './role.enum';
+import { toUserDto } from 'src/shared/mappers';
 
 @Injectable()
 export class UserService {
@@ -15,24 +14,19 @@ export class UserService {
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
   ) {}
-  /*
-  // eslint-disable-next-line @typescript-eslint/ban-types
-  async findOne(options?: object): Promise<LoginUserDto> {
-    const user = await this.userRepository.findOne(options);
-    return toLoginUserDto(user);
-  }*/
 
-  async findForValidation(email: string): Promise<User> {
+  async findByEmail(email: string): Promise<User> {
     const user = await this.userRepository.findOne({ where: { email } });
 
     if (!user) {
-      throw new HttpException('User not found', HttpStatus.UNAUTHORIZED);
+      throw new HttpException('User not found', HttpStatus.NOT_FOUND);
     }
 
     return user;
   }
 
-  async findForJwt({ email, password }: LoginUserDto): Promise<UserDto> {
+  async findForJwt(loginUserDto: LoginUserDto): Promise<UserDto> {
+    const { email, password } = loginUserDto;
     const user = await this.userRepository.findOne({
       where: { email },
     });
@@ -45,7 +39,7 @@ export class UserService {
 
     const userInDb = await this.userRepository.findOne({ where: { email } });
     if (userInDb) {
-      throw new HttpException('User already exists', HttpStatus.BAD_REQUEST);
+      throw new HttpException('User already exists', HttpStatus.CONFLICT);
     }
 
     const user: User = await this.userRepository.create({
@@ -59,57 +53,56 @@ export class UserService {
     return toUserDto(user);
   }
 
-  async getAllUsers(): Promise<UserDto[]> {
+  async findAll(): Promise<UserDto[]> {
     const users = await this.userRepository.find();
     return users.map((user) => toUserDto(user));
   }
 
-  async getByCheckout(checkoutId: string): Promise<User> {
+  async findByCheckout(checkoutId: string): Promise<User> {
     const orders = await this.userRepository.findOne({
       where: { checkout: checkoutId },
-      // relations:['product','checkout']
     });
     return orders;
   }
 
-  async getGuests(): Promise<UserDto[]> {
+  async findGuests(): Promise<UserDto[]> {
     const users = await this.userRepository.find({
       where: { role: Role.GUEST },
     });
     return users.map((user) => toUserDto(user));
   }
 
-  async getOneUser(id: string): Promise<User> {
+  async findOne(id: string): Promise<User> {
     const user = await this.userRepository.findOne({
       where: { id },
     });
 
     if (!user) {
-      throw new HttpException(`User doesn't exist`, HttpStatus.BAD_REQUEST);
+      throw new HttpException('User not found', HttpStatus.NOT_FOUND);
     }
 
     return user;
   }
 
-  async getAdmin(): Promise<User> {
+  async findAdmin(): Promise<User> {
     const user = await this.userRepository.findOne({
       where: { role: Role.ADMIN },
     });
 
     if (!user) {
-      throw new HttpException(`User doesn't exist`, HttpStatus.BAD_REQUEST);
+      throw new HttpException('User not found', HttpStatus.NOT_FOUND);
     }
 
     return user;
   }
 
-  async updateUserRole(id: string): Promise<UserDto> {
+  async updateRole(id: string): Promise<UserDto> {
     const user: User = await this.userRepository.findOne({
       where: { id },
     });
 
     if (!user) {
-      throw new HttpException(`User doesn't exist`, HttpStatus.BAD_REQUEST);
+      throw new HttpException('User not found', HttpStatus.NOT_FOUND);
     }
 
     await this.userRepository.update(id, {
@@ -119,13 +112,13 @@ export class UserService {
     return toUserDto(user);
   }
 
-  async deleteUser(id: string): Promise<UserDto> {
+  async delete(id: string): Promise<UserDto> {
     const user: User = await this.userRepository.findOne({
       where: { id },
     });
 
     if (!user) {
-      throw new HttpException(`User doesn't exist`, HttpStatus.BAD_REQUEST);
+      throw new HttpException('User not found', HttpStatus.NOT_FOUND);
     }
 
     await this.userRepository.delete({ id });

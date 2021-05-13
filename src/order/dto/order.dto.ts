@@ -1,8 +1,6 @@
-import { ProductDto } from "src/product/dto/product.dto";
-import { Product } from "src/product/entities/product.entity";
-
+import { ProductDto } from 'src/product/dto/product.dto';
 export class OrderDto {
-    id: string;
-    quantity: number;
-    product: ProductDto;
+  id: string;
+  quantity: number;
+  product: ProductDto;
 }
