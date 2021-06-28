@@ -7,8 +7,8 @@ import {
   Post,
   Req,
 } from '@nestjs/common';
-import { Roles } from 'src/auth/decorators/roles.decorator';
-import { Role } from 'src/user/role.enum';
+import { Roles } from '../auth/decorators/roles.decorator';
+import { Role } from '../user/role.enum';
 import { CheckoutService } from './checkout.service';
 import { CreateCheckoutDto } from './dto/checkout.create.dto';
 import { Checkout } from './entities/checkout.entity';

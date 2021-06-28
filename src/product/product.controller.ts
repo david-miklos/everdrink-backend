@@ -10,9 +10,9 @@ import {
 import { ProductService } from './product.service';
 import { ProductCreateDto } from './dto/product.create.dto';
 import { ProductDto } from './dto/product.dto';
-import { Public } from 'src/auth/decorators/routes.decorator';
-import { Roles } from 'src/auth/decorators/roles.decorator';
-import { Role } from 'src/user/role.enum';
+import { Public } from '../auth/decorators/routes.decorator';
+import { Roles } from '../auth/decorators/roles.decorator';
+import { Role } from '../user/role.enum';
 
 @Controller('product')
 export class ProductController {

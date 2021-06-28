@@ -1,6 +1,6 @@
-import { Address } from 'src/address/entities/address.entity';
-import { Order } from 'src/order/entities/order.entity';
-import { User } from 'src/user/entities/user.entity';
+import { Address } from '../../address/entities/address.entity';
+import { Order } from '../../order/entities/order.entity';
+import { User } from '../../user/entities/user.entity';
 import {
   Entity,
   Column,
@@ -23,8 +23,8 @@ export class Checkout {
 
   @OneToMany(() => Order, (order) => order.checkout)
   orders: Order[];
-  
-  @ManyToOne(() => User, (user) => user.checkouts)
+
+  @ManyToOne(() => User, (user) => user.checkouts, { onDelete: 'CASCADE' })
   user: User;
 
   @ManyToOne(() => Address, (address) => address.checkouts)

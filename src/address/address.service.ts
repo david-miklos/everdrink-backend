@@ -1,7 +1,7 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { User } from 'src/user/entities/user.entity';
-import { UserService } from 'src/user/user.service';
+import { User } from '../user/entities/user.entity';
+import { UserService } from '../user/user.service';
 import { Repository } from 'typeorm';
 import { AddressCreateDto } from './dto/address.create.dto';
 import { Address } from './entities/address.entity';
@@ -24,6 +24,7 @@ export class AddressService {
       where: {
         id: id,
       },
+      relations:['user']
     });
 
     if (!address) {

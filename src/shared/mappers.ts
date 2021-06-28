@@ -1,10 +1,10 @@
-import { CategoryDto } from "src/category/dto/category.dto";
-import { Category } from "src/category/entities/category.entity";
-import { ProductDto } from "src/product/dto/product.dto";
-import { Product } from "src/product/entities/product.entity";
-import { UserDto } from "src/user/dto/user.dto";
-import { LoginUserDto } from "src/user/dto/user.login.dto";
-import { User } from "src/user/entities/user.entity";
+import { CategoryDto } from "../category/dto/category.dto";
+import { Category } from "../category/entities/category.entity";
+import { ProductDto } from "../product/dto/product.dto";
+import { Product } from "../product/entities/product.entity";
+import { UserDto } from "../user/dto/user.dto";
+import { LoginUserDto } from "../user/dto/user.login.dto";
+import { User } from "../user/entities/user.entity";
 
 export const toUserDto = (data: User): UserDto => {
     const { id, email, role } = data;

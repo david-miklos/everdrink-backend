@@ -1,6 +1,6 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { toCategoryDto } from 'src/shared/mappers';
+import { toCategoryDto } from '../shared/mappers';
 import { Repository } from 'typeorm';
 import { CategoryCreateDto } from './dto/category.create.dto';
 import { CategoryDto } from './dto/category.dto';

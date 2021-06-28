@@ -1,8 +1,7 @@
 import { forwardRef, HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { CheckoutService } from 'src/checkout/checkout.service';
-import { ProductService } from 'src/product/product.service';
-import { UserService } from 'src/user/user.service';
+import { CheckoutService } from '../checkout/checkout.service';
+import { ProductService } from '../product/product.service';
 import { Repository } from 'typeorm';
 import { CreateOrderDto } from './dto/order.create.dto';
 import { Order } from './entities/order.entity';

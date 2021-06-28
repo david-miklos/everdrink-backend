@@ -7,9 +7,9 @@ import {
   Post,
   Put,
 } from '@nestjs/common';
-import { Roles } from 'src/auth/decorators/roles.decorator';
-import { Public } from 'src/auth/decorators/routes.decorator';
-import { Role } from 'src/user/role.enum';
+import { Roles } from '../auth/decorators/roles.decorator';
+import { Public } from '../auth/decorators/routes.decorator';
+import { Role } from '../user/role.enum';
 import { CategoryService } from './category.service';
 import { CategoryCreateDto } from './dto/category.create.dto';
 import { CategoryDto } from './dto/category.dto';

@@ -8,9 +8,8 @@ import {
   Put,
   Req,
 } from '@nestjs/common';
-import { Roles } from 'src/auth/decorators/roles.decorator';
-import { Public } from 'src/auth/decorators/routes.decorator';
-import { Role } from 'src/user/role.enum';
+import { Roles } from '../auth/decorators/roles.decorator';
+import { Role } from '../user/role.enum';
 import { CreateOrderDto } from './dto/order.create.dto';
 import { Order } from './entities/order.entity';
 import { OrderService } from './order.service';

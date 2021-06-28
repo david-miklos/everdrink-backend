@@ -1,5 +1,5 @@
-import { Checkout } from 'src/checkout/entities/checkout.entity';
-import { User } from 'src/user/entities/user.entity';
+import { Checkout } from '../../checkout/entities/checkout.entity';
+import { User } from '../../user/entities/user.entity';
 import {
   Entity,
   Column,

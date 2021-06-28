@@ -1,8 +1,8 @@
 import { forwardRef, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { CheckoutModule } from 'src/checkout/checkout.module';
-import { ProductModule } from 'src/product/product.module';
-import { UserModule } from 'src/user/user.module';
+import { CheckoutModule } from '../checkout/checkout.module';
+import { ProductModule } from '../product/product.module';
+import { UserModule } from '../user/user.module';
 import { Order } from './entities/order.entity';
 import { OrderController } from './order.controller';
 import { OrderService } from './order.service';

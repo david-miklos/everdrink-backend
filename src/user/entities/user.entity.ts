@@ -7,8 +7,8 @@ import {
 } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import { Role } from '../role.enum';
-import { Address } from 'src/address/entities/address.entity';
-import { Checkout } from 'src/checkout/entities/checkout.entity';
+import { Address } from '../../address/entities/address.entity';
+import { Checkout } from '../../checkout/entities/checkout.entity';
 @Entity('user')
 export class User {
   @PrimaryGeneratedColumn('uuid')

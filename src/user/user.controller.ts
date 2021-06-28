@@ -14,7 +14,7 @@ import { UserDto } from './dto/user.dto';
 import { Role } from './role.enum';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { Roles } from '../auth/decorators/roles.decorator';
-import { Public } from 'src/auth/decorators/routes.decorator';
+import { Public } from '../auth/decorators/routes.decorator';
 
 @Controller('user')
 export class UserController {

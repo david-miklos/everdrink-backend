@@ -6,11 +6,10 @@ import {
   Injectable,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { AddressService } from 'src/address/address.service';
-import { Address } from 'src/address/entities/address.entity';
-import { OrderService } from 'src/order/order.service';
-import { User } from 'src/user/entities/user.entity';
-import { UserService } from 'src/user/user.service';
+import { AddressService } from '../address/address.service';
+import { Address } from '../address/entities/address.entity';
+import { User } from '../user/entities/user.entity';
+import { UserService } from '../user/user.service';
 import { Repository } from 'typeorm';
 import { CreateCheckoutDto } from './dto/checkout.create.dto';
 import { Checkout } from './entities/checkout.entity';

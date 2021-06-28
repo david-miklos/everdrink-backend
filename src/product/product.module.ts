@@ -3,7 +3,7 @@ import { ProductService } from './product.service';
 import { Product } from './entities/product.entity';
 import { ProductController } from './product.controller';
 import { Module } from '@nestjs/common';
-import { CategoryModule } from 'src/category/category.module';
+import { CategoryModule } from '../category/category.module';
 
 @Module({
   imports: [CategoryModule,TypeOrmModule.forFeature([Product])],
