@@ -8,6 +8,7 @@ import {
   Put,
   Req,
 } from '@nestjs/common';
+import { Public } from 'src/auth/decorators/routes.decorator';
 import { Roles } from '../auth/decorators/roles.decorator';
 import { Role } from '../user/role.enum';
 import { CreateOrderDto } from './dto/order.create.dto';
@@ -30,10 +31,10 @@ export class OrderController {
     return await this.orderService.findByCheckout(checkoutId);
   }
 
-  @Roles(Role.PARTNER)
+  @Public()
+  // @Roles(Role.PARTNER)
   @Post('/create')
   async create(@Body() createOrderDto: CreateOrderDto,): Promise<Order> {
-    // const email = req.user.email;
     return await this.orderService.create(createOrderDto);
   }
   

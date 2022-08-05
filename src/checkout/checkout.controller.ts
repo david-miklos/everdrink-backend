@@ -7,6 +7,8 @@ import {
   Post,
   Req,
 } from '@nestjs/common';
+import { Public } from 'src/auth/decorators/routes.decorator';
+import { User } from 'src/user/entities/user.entity';
 import { Roles } from '../auth/decorators/roles.decorator';
 import { Role } from '../user/role.enum';
 import { CheckoutService } from './checkout.service';
@@ -23,12 +25,14 @@ export class CheckoutController {
     return await this.checkoutService.findAll();
   }
 
-  @Roles(Role.PARTNER)
+
+  @Roles(Role.PARTNER, Role.GUEST)
   @Post('/create')
   async create(
     @Req() req,
     @Body() createCheckoutDto: CreateCheckoutDto,
   ): Promise<Checkout> {
+    console.log(req.user)
     const userId = req.user.id;
     return await this.checkoutService.createCheckout(userId, createCheckoutDto);
   }

@@ -58,7 +58,7 @@ export class UserController {
     return await this.userService.delete(id);
   }
 
-  @Roles(Role.GUEST, Role.PARTNER)
+  @Public()
   @Post('upload')
   @UseInterceptors(FileInterceptor('file'))
   async uploadFile(@UploadedFile() file: Express.Multer.File): Promise<Object> {

@@ -1,5 +1,6 @@
 import { Controller } from '@nestjs/common';
 import { Body, Get, Param, Post, Req } from '@nestjs/common';
+import { Public } from 'src/auth/decorators/routes.decorator';
 import { Roles } from '../auth/decorators/roles.decorator';
 import { Role } from '../user/role.enum';
 import { AddressService } from './address.service';
@@ -10,31 +11,31 @@ import { Address } from './entities/address.entity';
 export class AddressController {
   constructor(private addressService: AddressService) {}
 
-  @Roles(Role.PARTNER,Role.ADMIN)
+  @Public()
   @Get('')
   async getAll(): Promise<Address[]> {
     return await this.addressService.findAll();
   }
 
-  @Roles(Role.PARTNER,Role.ADMIN)
+  @Public()
   @Get('admin')
   async getAdmin(): Promise<Address[]> {
     return await this.addressService.findAdmin();
   }
 
-  @Roles(Role.PARTNER,Role.ADMIN)
+  @Public()
   @Get(':id/get')
   async findOne(@Param('id') id: string): Promise<Address> {
     return await this.addressService.findOne(id);
   }
 
-  @Roles(Role.ADMIN,Role.PARTNER)
+  @Public()
   @Get(':userId/user')
   async findByUser(@Param('userId') userId: string): Promise<Address[]> {
     return await this.addressService.findByUser(userId);
   }
 
-  @Roles(Role.GUEST, Role.PARTNER)
+  @Roles(Role.ADMIN,Role.PARTNER,Role.GUEST)
   @Post('create')
   async create(
     @Req() req,
