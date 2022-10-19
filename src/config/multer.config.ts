@@ -1,5 +1,5 @@
-import { diskStorage } from "multer";
-import { editFileName, fileFilter } from "../shared/utils";
+import { diskStorage } from 'multer';
+import { editFileName, fileFilter } from '../shared/utils';
 
 const MulterConfig = () => ({
   storage: diskStorage({
